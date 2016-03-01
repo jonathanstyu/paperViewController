@@ -14,6 +14,7 @@ class PaperViewController: UIViewController {
     var titleText: String
     
     var textRect: CGRect!
+    var bottomBarView: UITabBar!
     
     var textContainer: NSTextContainer!
     
@@ -38,11 +39,23 @@ class PaperViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textRect = CGRectInset(self.view.bounds, 5.0, 5.0)
+        textRect = self.view.bounds
         
         setupTextStorage()
         setupTextContainer()
         setupTextView()
+        setupBottomBar()
+    }
+    
+    func setupBottomBar() {
+//        Create a UITabbar that will eventually shrink out of view during scrolling and control fonts/font sizes
+        let fontButton = UITabBarItem(title: "Font", image: nil, tag: 1)
+        let fontSizeButton = UITabBarItem(title: "Size", image: nil, tag: 2)
+        
+        bottomBarView = UITabBar(frame: CGRect(x: 0, y: (view.bounds.height - 45.0), width: view.bounds.width, height: 45.0))
+        bottomBarView.items = [fontButton, fontSizeButton]
+        bottomBarView.delegate = self
+        view.addSubview(bottomBarView)
     }
     
     func setupTextStorage() {
@@ -73,6 +86,7 @@ class PaperViewController: UIViewController {
         textView = UITextView(frame: textRect, textContainer: textContainer)
         textView.editable = false
         textView.contentSize = textContainer.size
+        textView.delegate = self
         textView.scrollEnabled = true
         textView.backgroundColor = UIColor.whiteColor()
         textView.dataDetectorTypes = UIDataDetectorTypes.Link
